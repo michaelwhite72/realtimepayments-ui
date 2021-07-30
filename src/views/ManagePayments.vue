@@ -109,7 +109,7 @@ export default {
     };
   },
   async created() {
-    console.log("testing123");
+    console.log("Opening Manage Payment Requests.....");
     try {
       const response = await axios.get("/api/b2b/login");
       const curToken = response.data.token;
@@ -118,9 +118,9 @@ export default {
         const myUrl = "/api/transaction-search-debtorID?token=" + this.token;
         const transactions = await axios.get(myUrl);
         console.log(transactions);
-        console.log("test");
+        console.log("transactions retrieved....");
       }
-      console.log(this.token);
+      // console.log(this.token);
     } catch (err) {
       console.log(err);
     }
