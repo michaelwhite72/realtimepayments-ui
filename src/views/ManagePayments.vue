@@ -40,16 +40,55 @@
 
     <div class="home">
       <h1>{{ message }}</h1>
+      <!-- <p>{{ this.paymentRequests }}</p> -->
+      <!-- <p>{{ this.paymentInfo.data[0].messageId }}</p> -->
     </div>
 
-    <!-- <v-container fluid>
-      <p>{{ transactions }}</p>
-    </v-container> -->
+    <!-- Payment Requests (New-Aug21) -->
+    <v-container fluid>
+      <v-row justify="center">
+        <v-col
+          v-for="paymentRequest in paymentRequests"
+          :key="
+            paymentRequest.paymentIdentification
+              .paymentInformationIdentification
+          "
+          cols="auto"
+        >
+          <v-card color="red accent-1" elevation="20" outlined>
+            <v-card-title>
+              {{
+                paymentRequest.creditorDebtorInformation.creditorIdentification
+                  .creditorName
+              }}
+            </v-card-title>
+            <v-card-text>
+              <h4>
+                Reference:
+                {{
+                  paymentRequest.paymentIdentification
+                    .paymentInformationIdentification
+                }}
+
+                <br />
+                Amount: $
+                {{ paymentRequest.settlementAmount.amount }}
+              </h4>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn color="green"> PAY NOW </v-btn>
+              <v-btn color="yellow"> PAY LATER</v-btn>
+              <v-btn color="red"> DECLINE </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
 
     <!-- PAYMENT REQUEST INFO-->
     <v-container fluid>
       <v-row align="center" justify="center">
-        <!-- Transaction ID -- provided by GPP -->
+        <!-- 
         <v-col class="d-flex" cols="4" sm="3">
           <v-textarea
             outlined
@@ -59,31 +98,31 @@
             :value="`${paymentInformationId}`"
             readonly
           ></v-textarea>
-        </v-col>
+        </v-col> -->
 
         <!-- Creditor Name -- from GPP -->
-        <v-col class="d-flex" cols="4" sm="3">
+        <!-- <v-col class="d-flex" cols="4" sm="3">
           <v-text-field
             v-model="creditor"
             label="Payee Name"
             outlined
           ></v-text-field>
-        </v-col>
+        </v-col> -->
 
         <!-- Amount -- suppplied by GPP-->
-        <v-col class="d-flex" cols="4" sm="3">
+        <!-- <v-col class="d-flex" cols="4" sm="3">
           <v-text-field
             v-model="amount"
             label="Amount (USD)"
             outlined
           ></v-text-field>
-        </v-col>
+        </v-col> -->
 
         <!-- ACCEPT / DECLINE BUTTONS -->
-        <v-col class="d-flex" cols="5" sm="2">
+        <!-- <v-col class="d-flex" cols="5" sm="2">
           <v-btn depressed color="green"> MAKE PAYMENT </v-btn>
           <v-btn depressed color="red"> DECLINE </v-btn>
-        </v-col>
+        </v-col> -->
         <!-- accept / decline end -->
       </v-row>
     </v-container>
@@ -101,11 +140,12 @@ export default {
     return {
       message: "Manage Received Payment Requests!",
       today: moment().format("YYYY-MM-DD"),
-      paymentInformationId: Math.floor(Math.random() * 100000000000),
-      creditor: "",
-      amount: "",
+      // paymentInformationId: Math.floor(Math.random() * 100000000000),
+      // creditor: "",
+      // amount: "",
       debtorId: "1919191919",
-      transactions: [],
+      paymentInfo: [],
+      paymentRequests: {},
     };
   },
   async created() {
@@ -116,9 +156,11 @@ export default {
       this.token = curToken;
       if (this.token) {
         const myUrl = "/api/transaction-search-debtorID?token=" + this.token;
-        const transactions = await axios.get(myUrl);
-        console.log(transactions);
-        console.log("transactions retrieved....");
+        this.paymentInfo = await axios.get(myUrl);
+        this.paymentRequests = this.paymentInfo.data.items;
+
+        console.log(this.paymentRequests);
+        console.log("payment Requests retrieved....");
       }
       // console.log(this.token);
     } catch (err) {
