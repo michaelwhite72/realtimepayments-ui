@@ -191,7 +191,7 @@
                       >CANCEL</v-btn
                     >
                     <v-btn
-                      v-on:click="makePayment()"
+                      v-on:click="makePaymentRequest()"
                       @click="dialog.value = false"
                       depressed
                       color="green"
@@ -266,11 +266,11 @@ export default {
       this.salesTotal = this.tunaTotal + this.lobsterTotal + this.crabTotal;
     },
 
-    async makePayment() {
+    async makePaymentRequest() {
       // console.log(this.token);
-      console.log(this.paymentInformationId);
-      console.log(this.salesTotal);
-      console.log(this.executionDate);
+      // console.log(this.paymentInformationId);
+      // console.log(this.salesTotal);
+      // console.log(this.executionDate);
       var paymentRequestInitiate = {
         token: this.token,
         amt: this.salesTotal,

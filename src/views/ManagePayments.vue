@@ -40,6 +40,7 @@
 
     <div class="home">
       <h1>{{ message }}</h1>
+      <v-btn color="blue" v-on:click="updatePaymentRequests"> UPDATE </v-btn>
       <!-- <p>{{ this.paymentRequests }}</p> -->
       <!-- <p>{{ this.paymentInfo.data[0].messageId }}</p> -->
     </div>
@@ -55,14 +56,32 @@
           "
           cols="auto"
         >
-          <v-card color="red accent-1" elevation="20" outlined>
-            <v-card-title>
+          <v-card color="blue lighten-4" elevation="20" outlined>
+            <v-card-title
+              :name="creditor"
+              :value="
+                `${paymentRequest.creditorDebtorInformation.creditorIdentification.creditorName}`
+              "
+            >
               {{
                 paymentRequest.creditorDebtorInformation.creditorIdentification
                   .creditorName
               }}
             </v-card-title>
-            <v-card-text>
+            <!-- <v-text-area
+              name="creditor"
+              :value="
+                `${paymentRequest.creditorDebtorInformation.creditorIdentification.creditorName}`
+              "
+            >
+            </v-text-area> -->
+            <!-- <v-card-text
+              name="creditor"
+              label="Creditor"
+              :value="
+                `${paymentRequest.creditorDebtorInformation.creditorIdentification.creditorName}`
+              "
+            >
               <h4>
                 Reference:
                 {{
@@ -74,9 +93,9 @@
                 Amount: $
                 {{ paymentRequest.settlementAmount.amount }}
               </h4>
-            </v-card-text>
+            </v-card-text> -->
             <v-card-actions>
-              <v-btn color="green"> PAY NOW </v-btn>
+              <v-btn color="green" v-on:click="makePayment"> PAY NOW </v-btn>
               <v-btn color="yellow"> PAY LATER</v-btn>
               <v-btn color="red"> DECLINE </v-btn>
             </v-card-actions>
@@ -87,21 +106,35 @@
 
     <!-- PAYMENT REQUEST INFO-->
     <v-container fluid>
-      <v-row align="center" justify="center">
-        <!-- 
-        <v-col class="d-flex" cols="4" sm="3">
+      <!-- <v-row align="center" justify="center"> -->
+      <!-- <v-col
+          class="d-flex"
+          cols="4"
+          sm="3">
+
+          
           <v-textarea
             outlined
             rows="1"
             name="paymentInformationId"
-            label="Transaction ID"
-            :value="`${paymentInformationId}`"
+            label="Creditor"
+            :value="
+              `${paymentRequest.creditorDebtorInformation.creditorIdentification.creditorName}`
+            "
+            readonly
+          ></v-textarea>
+          <v-textarea
+            outlined
+            rows="1"
+            name="paymentInformationId"
+            label="Creditor"
+            :value="`${paymentRequest.settlementAmount.amount}`"
             readonly
           ></v-textarea>
         </v-col> -->
 
-        <!-- Creditor Name -- from GPP -->
-        <!-- <v-col class="d-flex" cols="4" sm="3">
+      <!-- Creditor Name -- from GPP -->
+      <!-- <v-col class="d-flex" cols="4" sm="3">
           <v-text-field
             v-model="creditor"
             label="Payee Name"
@@ -109,8 +142,8 @@
           ></v-text-field>
         </v-col> -->
 
-        <!-- Amount -- suppplied by GPP-->
-        <!-- <v-col class="d-flex" cols="4" sm="3">
+      <!-- Amount -- suppplied by GPP-->
+      <!-- <v-col class="d-flex" cols="4" sm="3">
           <v-text-field
             v-model="amount"
             label="Amount (USD)"
@@ -118,13 +151,13 @@
           ></v-text-field>
         </v-col> -->
 
-        <!-- ACCEPT / DECLINE BUTTONS -->
-        <!-- <v-col class="d-flex" cols="5" sm="2">
+      <!-- ACCEPT / DECLINE BUTTONS -->
+      <!-- <v-col class="d-flex" cols="5" sm="2">
           <v-btn depressed color="green"> MAKE PAYMENT </v-btn>
           <v-btn depressed color="red"> DECLINE </v-btn>
         </v-col> -->
-        <!-- accept / decline end -->
-      </v-row>
+      <!-- accept / decline end -->
+      <!-- </v-row> -->
     </v-container>
   </div>
 </template>
@@ -146,6 +179,9 @@ export default {
       debtorId: "1919191919",
       paymentInfo: [],
       paymentRequests: {},
+      creditor: "NA",
+      paymentInformationId: "",
+      amount: "",
     };
   },
   async created() {
@@ -176,6 +212,22 @@ export default {
     requestPayment() {
       this.$router.push({ path: "RequestPayment" });
       console.log("RequestPayment");
+    },
+
+    async updatePaymentRequests() {
+      console.log("updating");
+      if (this.token) {
+        const myUrl = "/api/transaction-search-debtorID?token=" + this.token;
+        var paymentInfo = await axios.get(myUrl);
+        var paymentRequests = paymentInfo.data.items;
+
+        console.log(paymentRequests);
+        console.log("Updated....");
+      }
+    },
+
+    makePayment() {
+      console.log(this.creditor);
     },
   },
 };
