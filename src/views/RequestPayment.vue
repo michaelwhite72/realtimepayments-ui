@@ -165,15 +165,15 @@
                       <br />
                       <h2>Tuna Total: $ {{ tunaTotal.toFixed(2) }}</h2>
                       <p>qty: {{ tuna.val }}</p>
-                      <p>Price: $4 per pound</p>
+                      <p>Price: $9.18 per pound</p>
                       <br />
                       <h2>Lobster Total: $ {{ lobsterTotal.toFixed(2) }}</h2>
                       <p>qty: {{ lobster.val }}</p>
-                      <p>Price: $3 per pound</p>
+                      <p>Price: $12.33 per pound</p>
                       <br />
                       <h2>Crab Total: $ {{ crabTotal.toFixed(2) }}</h2>
                       <p>qty: {{ crab.val }}</p>
-                      <p>Price: $5 per pound</p>
+                      <p>Price: $8.79 per pound</p>
                       <br />
                       <br />
                       <h1>
@@ -222,7 +222,7 @@ export default {
     return {
       message: "Send Request for Payment ",
       today: moment().format("YYYY-MM-DD"),
-      paymentInformationId: Math.floor(Math.random() * 10000000000000),
+      paymentInformationId: Math.floor(Math.random() * 10000000000000).toString(),
       tuna: { label: "Tuna", val: 0, color: "blue" },
       lobster: { label: "Lobster", val: 0, color: "red" },
       crab: { label: "Crab", val: 0, color: "orange" },
@@ -237,6 +237,7 @@ export default {
         "Mike's Fish Joint",
         "Dan's Catch of the Day",
       ],
+      transactionId: ""
     };
   },
   async created() {
@@ -260,9 +261,9 @@ export default {
       this.$router.go();
     },
     async showPaymentRequest() {
-      this.tunaTotal = this.tuna.val * 4;
-      this.lobsterTotal = this.lobster.val * 3;
-      this.crabTotal = this.crab.val * 5;
+      this.tunaTotal = this.tuna.val * 9.18;
+      this.lobsterTotal = this.lobster.val * 12.33;
+      this.crabTotal = this.crab.val * 8.79;
       this.salesTotal = this.tunaTotal + this.lobsterTotal + this.crabTotal;
     },
 
@@ -271,11 +272,15 @@ export default {
       // console.log(this.paymentInformationId);
       // console.log(this.salesTotal);
       // console.log(this.executionDate);
+      // localStorage.setItem("transactionId", this.paymentInformationId);
+      localStorage.transactionId = this.paymentInformationId;
+      localStorage.transactionAmt = this.salesTotal;
       var paymentRequestInitiate = {
         token: this.token,
         amt: this.salesTotal,
         dbtrNm: this.customerName,
-        pmtInfId: this.paymentInformationId,
+        pmtInfoId: this.paymentInformationId,
+        date: this.today
       };
       console.log(paymentRequestInitiate);
       axios

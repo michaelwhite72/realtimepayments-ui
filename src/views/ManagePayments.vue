@@ -1,4 +1,9 @@
 <template>
+
+<!-- --------------------------------- -->
+<!-- MANAGE PAYMENTS HARDCODED -->
+<!-- ---------------------------------- -->
+
   <div id="app">
     <v-app-bar app color="pink darken-2">
       <div class="d-flex align-center">
@@ -40,125 +45,127 @@
 
     <div class="home">
       <h1>{{ message }}</h1>
-      <v-btn color="blue" v-on:click="updatePaymentRequests"> UPDATE </v-btn>
-      <!-- <p>{{ this.paymentRequests }}</p> -->
-      <!-- <p>{{ this.paymentInfo.data[0].messageId }}</p> -->
+
     </div>
 
-    <!-- Payment Requests (New-Aug21) -->
+
     <v-container fluid>
       <v-row justify="center">
-        <v-col
-          v-for="paymentRequest in paymentRequests"
-          :key="
-            paymentRequest.paymentIdentification
-              .paymentInformationIdentification
-          "
-          cols="auto"
-        >
-          <v-card color="blue lighten-4" elevation="20" outlined>
-            <v-card-title
-              :name="creditor"
-              :value="
-                `${paymentRequest.creditorDebtorInformation.creditorIdentification.creditorName}`
-              "
+    <!-- PAYMENT REQUEST INFO from UI-->
+        <v-card
+              class="mx-auto"
+              max-width="344"
+  
+              color="blue lighten-4" 
+              elevation="20" 
+              outlined
             >
-              {{
-                paymentRequest.creditorDebtorInformation.creditorIdentification
-                  .creditorName
-              }}
-            </v-card-title>
-            <!-- <v-text-area
-              name="creditor"
-              :value="
-                `${paymentRequest.creditorDebtorInformation.creditorIdentification.creditorName}`
-              "
-            >
-            </v-text-area> -->
-            <!-- <v-card-text
-              name="creditor"
-              label="Creditor"
-              :value="
-                `${paymentRequest.creditorDebtorInformation.creditorIdentification.creditorName}`
-              "
-            >
-              <h4>
-                Reference:
-                {{
-                  paymentRequest.paymentIdentification
-                    .paymentInformationIdentification
-                }}
-
-                <br />
-                Amount: $
-                {{ paymentRequest.settlementAmount.amount }}
-              </h4>
-            </v-card-text> -->
-            <v-card-actions>
-              <v-btn color="green" v-on:click="makePayment"> PAY NOW </v-btn>
-              <v-btn color="yellow"> PAY LATER</v-btn>
-              <v-btn color="red"> DECLINE </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <!-- PAYMENT REQUEST INFO-->
-    <v-container fluid>
-      <!-- <v-row align="center" justify="center"> -->
-      <!-- <v-col
-          class="d-flex"
-          cols="4"
-          sm="3">
-
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <div class="text-h4 mb-4">
+                    Maine Seafood
+                  </div>
+                
+                  <v-list-item-title class="text-h6
+                  mb-2">
+                    PAYMENT ID: {{ paymentInformationId }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="text-h6 mb-1">
+                    Amount (USD): {{ amount }}
+                    </v-list-item-subtitle>
+                </v-list-item-content>
           
-          <v-textarea
-            outlined
-            rows="1"
-            name="paymentInformationId"
-            label="Creditor"
-            :value="
-              `${paymentRequest.creditorDebtorInformation.creditorIdentification.creditorName}`
-            "
-            readonly
-          ></v-textarea>
-          <v-textarea
-            outlined
-            rows="1"
-            name="paymentInformationId"
-            label="Creditor"
-            :value="`${paymentRequest.settlementAmount.amount}`"
-            readonly
-          ></v-textarea>
-        </v-col> -->
+                <!-- <v-list-item-avatar
+                  tile
+                  size="80"
+                  color="grey"
+                ></v-list-item-avatar> -->
+              </v-list-item>
+          
+              <v-card-actions>
+                <v-btn color="green" v-on:click="makePayment"> PAY NOW </v-btn>
+                <v-btn color="yellow"> PAY LATER</v-btn>
+                <v-btn color="red"> DECLINE </v-btn>
+              </v-card-actions>
+        </v-card>
 
-      <!-- Creditor Name -- from GPP -->
-      <!-- <v-col class="d-flex" cols="4" sm="3">
-          <v-text-field
-            v-model="creditor"
-            label="Payee Name"
-            outlined
-          ></v-text-field>
-        </v-col> -->
+      <!-- PAYMENT REQUEST INFO HC1-->
+        <v-card
+              class="mx-auto"
+              max-width="344"
+  
+              color="blue lighten-4" 
+              elevation="20" 
+              outlined
+            >
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <div class="text-h4 mb-4">
+                    Ted's Shrimp
+                  </div>
+                
+                  <v-list-item-title class="text-h6
+                  mb-2">
+                    PAYMENT ID: 8439695737802
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="text-h6 mb-1">
+                    Amount (USD): 927.88
+                    </v-list-item-subtitle>
+                </v-list-item-content>
+          
+                <!-- <v-list-item-avatar
+                  tile
+                  size="80"
+                  color="grey"
+                ></v-list-item-avatar> -->
+              </v-list-item>
+          
+              <v-card-actions>
+                <v-btn color="green" v-on:click="makePayment"> PAY NOW </v-btn>
+                <v-btn color="yellow"> PAY LATER</v-btn>
+                <v-btn color="red"> DECLINE </v-btn>
+              </v-card-actions>
+        </v-card>
 
-      <!-- Amount -- suppplied by GPP-->
-      <!-- <v-col class="d-flex" cols="4" sm="3">
-          <v-text-field
-            v-model="amount"
-            label="Amount (USD)"
-            outlined
-          ></v-text-field>
-        </v-col> -->
-
-      <!-- ACCEPT / DECLINE BUTTONS -->
-      <!-- <v-col class="d-flex" cols="5" sm="2">
-          <v-btn depressed color="green"> MAKE PAYMENT </v-btn>
-          <v-btn depressed color="red"> DECLINE </v-btn>
-        </v-col> -->
-      <!-- accept / decline end -->
-      <!-- </v-row> -->
-    </v-container>
+        <!-- PAYMENT REQUEST INFO HC2-->
+        <v-card
+              class="mx-auto"
+              max-width="344"
+  
+              color="blue lighten-4" 
+              elevation="20" 
+              outlined
+            >
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <div class="text-h4 mb-4">
+                    Bubba's Vegetables
+                  </div>
+                
+                  <v-list-item-title class="text-h6
+                  mb-3">
+                    PAYMENT ID: 3310015986028
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="text-h6 mb-1">
+                    Amount (USD): 1,236.51
+                    </v-list-item-subtitle>
+                </v-list-item-content>
+          
+                <!-- <v-list-item-avatar
+                  tile
+                  size="80"
+                  color="grey"
+                ></v-list-item-avatar> -->
+              </v-list-item>
+          
+              <v-card-actions>
+                <v-btn color="green" v-on:click="makePayment"> PAY NOW </v-btn>
+                <v-btn color="yellow"> PAY LATER</v-btn>
+                <v-btn color="red"> DECLINE </v-btn>
+              </v-card-actions>
+        </v-card>
+      </v-row>
+    </v-container>  
   </div>
 </template>
 
@@ -180,28 +187,13 @@ export default {
       paymentInfo: [],
       paymentRequests: {},
       creditor: "NA",
-      paymentInformationId: "",
-      amount: "",
+      paymentInformationId: localStorage.transactionId,
+      amount: Number(localStorage.transactionAmt).toFixed(2),
+      
     };
   },
   async created() {
     console.log("Opening Manage Payment Requests.....");
-    try {
-      const response = await axios.get("/api/b2b/login");
-      const curToken = response.data.token;
-      this.token = curToken;
-      if (this.token) {
-        const myUrl = "/api/transaction-search-debtorID?token=" + this.token;
-        this.paymentInfo = await axios.get(myUrl);
-        this.paymentRequests = this.paymentInfo.data.items;
-
-        console.log(this.paymentRequests);
-        console.log("payment Requests retrieved....");
-      }
-      // console.log(this.token);
-    } catch (err) {
-      console.log(err);
-    }
   },
 
   methods: {
@@ -214,20 +206,9 @@ export default {
       console.log("RequestPayment");
     },
 
-    async updatePaymentRequests() {
-      console.log("updating");
-      if (this.token) {
-        const myUrl = "/api/transaction-search-debtorID?token=" + this.token;
-        var paymentInfo = await axios.get(myUrl);
-        var paymentRequests = paymentInfo.data.items;
-
-        console.log(paymentRequests);
-        console.log("Updated....");
-      }
-    },
 
     makePayment() {
-      console.log(this.creditor);
+      console.log(`Payment ${this.paymentInformationId} is complete`);
     },
   },
 };
