@@ -72,7 +72,10 @@
                   </v-list-item-title>
                   <v-list-item-subtitle class="text-h6 mb-1">
                     Amount (USD): {{ amount }}
-                    </v-list-item-subtitle>
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle class="text-h6 mb-1 ">
+                    Status: {{ status }}
+                  </v-list-item-subtitle>
                 </v-list-item-content>
           
                 <!-- <v-list-item-avatar
@@ -189,11 +192,16 @@ export default {
       creditor: "NA",
       paymentInformationId: localStorage.transactionId,
       amount: Number(localStorage.transactionAmt).toFixed(2),
-      
+      status: "unpaid"
     };
   },
   async created() {
     console.log("Opening Manage Payment Requests.....");
+    const response = await axios.get("/api/b2b/login");
+    const curToken = response.data.token;
+    this.token = curToken;
+    // console.log(this.token);
+    return (this.executionDate = moment().format("YYYY-MM-DD"));
   },
 
   methods: {
@@ -208,7 +216,26 @@ export default {
 
 
     makePayment() {
-      console.log(`Payment ${this.paymentInformationId} is complete`);
+      console.log(`Payment ${this.paymentInformationId} of ${this.amount} is processing`);
+      this.status = "paid";
+      var makePayment = {
+        token: this.token,
+        paymentId: this.paymentInformationId,
+        amt: this.amount,
+        date: this.today
+      }
+      console.log(makePayment);
+      axios
+        .post("/api/make-payment", makePayment, {
+          headers: { "Content-Type": "application/json" },
+        })
+
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
     },
   },
 };
